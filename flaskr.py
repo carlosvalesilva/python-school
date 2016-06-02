@@ -9,7 +9,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def show_entries():
-    conn = psycopg2.connect(database="cphqieql", user="cphqieql", host="jumbo.db.elephantsql.com",password="mW3yvNGp3wHFGuFp56mn4gdkdKb1UJ5T")
+    conn = psycopg2.connect(database="cphqieql", user="cphqieql", host="75.126.166.187",password="mW3yvNGp3wHFGuFp56mn4gdkdKb1UJ5T")
     cur = conn.cursor()
     cur.execute('SELECT title, text FROM entries ORDER BY id DESC')
     entries = cur.fetchall()
@@ -23,14 +23,15 @@ def get_produto():
     cur.execute('SELECT name, artist, album from Song')
     entries = cur.fetchall()
     songs_as_dict = []
-#    for song in entries:
-#        song_as_dict = {
-#            'name' : song["name"],
-#            'artist' : song["artist"],
-#            'album' : song["album"]}
-#        songs_as_dict.append(song_as_dict)
- #   return simplejson.dumps(songs_as_dict)
-    return entries
+    for song in entries:
+        song_as_dict = {
+            'name' : song[0],
+            'artist' : song[1],
+            'album' : song[2]}
+        songs_as_dict.append(song_as_dict)
+    return simplejson.dumps(songs_as_dict)
+
+
 
 @app.route('/add', methods=['POST'])
 def add_entry():
@@ -69,6 +70,9 @@ def logout():
 
 port = os.getenv('PORT', '5000')
 if __name__ == "__main__":
+    app.secret_key = 'super secret key'
+    app.config['SESSION_TYPE'] = 'filesystem'
+    app.debug = True
     app.run(host='0.0.0.0', port=int(port))
 
 
