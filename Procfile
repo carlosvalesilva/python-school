@@ -1,1 +1,1 @@
-web: python flaskr.py
+web: python webservice3.py
